@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus. Exam Mode</title>
+    <meta name="description" content="Compress your course material into a highly optimized, last-minute revision package.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="background-grid"></div>
+
+    <main class="container">
+        <header class="app-header">
+            <h1 class="logo-text">Focus <span class="dot">.</span></h1>
+            <p class="subtitle">Accelerated exam prioritization & preparation.</p>
+        </header>
+
+        <section id="input-section" class="glass-panel slide-up">
+            <form id="exam-form">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course-material">Syllabus / Outline (Text)</label>
+                        <textarea id="course-material" placeholder="Paste your syllabus topics here..." style="min-height: 100px;">Operating Systems:
+1. CPU Scheduling (FCFS, SJF, RR)
+2. Deadlocks (Banker's Algorithm, Avoidance)
+3. Paging and Virtual Memory
+4. File Systems Allocation</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row upload-row">
+                    <div class="form-group file-upload-container">
+                        <label>Notes / Book Chapters</label>
+                        <label for="notes-upload" class="file-upload-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Upload Notes (PDF/Images)</span>
+                        </label>
+                        <input type="file" id="notes-upload" accept=".pdf,.txt,.png,.jpg,.jpeg" multiple class="hidden-input">
+                        <div id="notes-list" class="file-list"></div>
+                    </div>
+                    
+                    <div class="form-group file-upload-container">
+                        <label>Previous Year Papers (Optional)</label>
+                        <label for="pyq-upload" class="file-upload-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Upload PYQs (PDF/Images)</span>
+                        </label>
+                        <input type="file" id="pyq-upload" accept=".pdf,.txt,.png,.jpg,.jpeg" multiple class="hidden-input">
+                        <div id="pyq-list" class="file-list"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exam-date">Exam Date</label>
+                        <input type="date" id="exam-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="available-time">Available Study Time</label>
+                        <select id="available-time" required>
+                            <option value="6 hours">6 Hours (Detailed Plan)</option>
+                            <option value="3 hours">3 Hours (Crash Plan)</option>
+                            <option value="1 hour">1 Hour (High-Yield Only)</option>
+                            <option value="20 minutes">20 Minutes (SURVIVAL MODE 💀)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="api-key">Gemini API Key</label>
+                        <input type="password" id="api-key" placeholder="AIzaSy..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="generate-btn">
+                    <span class="btn-text">Generate Priority Plan</span>
+                    <div class="loader hidden" id="btn-loader"></div>
+                </button>
+            </form>
+        </section>
+
+        <section id="results-section" class="hidden">
+            <div class="tabs-scroll-wrapper">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="roi">Exam ROI 📈</button>
+                    <button class="tab-btn" data-tab="timeline">Priority Timeline</button>
+                    <button class="tab-btn danger-tab" data-tab="skip">Skip For Now ⛔</button>
+                    <button class="tab-btn" data-tab="notes">Ultra-Short Notes</button>
+                    <button class="tab-btn" data-tab="formulas">Formulas & PYQs</button>
+                    <button class="tab-btn" data-tab="cheat-sheet">5-Min Cheat Sheet</button>
+                    <button class="tab-btn" data-tab="rapid-test">Rapid Test</button>
+                </div>
+            </div>
+
+            <!-- Exam ROI Tab -->
+            <div class="tab-content active" id="tab-roi">
+                <div class="glass-panel">
+                    <h2 class="section-title">Marks-per-Minute Analysis</h2>
+                    <p class="section-desc">We've calculated the Exam ROI (Return on Investment) for your topics.</p>
+                    <div class="table-responsive">
+                        <table class="roi-table">
+                            <thead>
+                                <tr>
+                                    <th>Topic</th>
+                                    <th>Importance</th>
+                                    <th>Difficulty</th>
+                                    <th>Est. Time</th>
+                                    <th>ROI (pts/min)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roi-table-body">
+                                <!-- ROI rows injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Timeline Tab -->
+            <div class="tab-content" id="tab-timeline">
+                <div class="glass-panel">
+                    <h2 class="section-title">Your <span id="display-time" class="highlight"></span> Revision Plan</h2>
+                    <div id="timeline-container" class="timeline">
+                        <!-- Timeline items will be injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skip For Now Tab -->
+            <div class="tab-content" id="tab-skip">
+                <div class="glass-panel danger-panel">
+                    <h2 class="section-title text-danger">Do Not Study These</h2>
+                    <p class="section-desc">Based on your limited time, these topics yield the lowest return on investment. Skip them to secure passing marks elsewhere.</p>
+                    <div id="skip-container" class="skip-grid">
+                        <!-- Skip items injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ultra-Short Notes Tab -->
+            <div class="tab-content" id="tab-notes">
+                <div class="glass-panel">
+                    <h2 class="section-title">Ultra-Short Notes</h2>
+                    <div id="notes-container" class="markdown-content">
+                        <!-- Markdown injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulas & PYQs Tab -->
+            <div class="tab-content" id="tab-formulas">
+                <div class="glass-panel">
+                    <h2 class="section-title">Formulas & Likely Questions</h2>
+                    <div id="formulas-container" class="markdown-content">
+                        <!-- Markdown injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Min Cheat Sheet Tab -->
+            <div class="tab-content" id="tab-cheat-sheet">
+                <div class="glass-panel highlight-panel">
+                    <h2 class="section-title">Final 5-Minute Cheat Sheet</h2>
+                    <p class="section-desc">Read this while waiting outside the exam hall.</p>
+                    <div id="cheat-sheet-container" class="markdown-content">
+                        <!-- Markdown injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rapid Test Tab -->
+            <div class="tab-content" id="tab-rapid-test">
+                <div class="glass-panel">
+                    <h2 class="section-title">Rapid Test</h2>
+                    <div id="quiz-container">
+                        <!-- Quiz questions will be injected here -->
+                    </div>
+                    <button id="submit-quiz-btn" class="btn-primary hidden">Submit Quiz</button>
+                    <div id="quiz-results" class="hidden">
+                        <h3>Your Score: <span id="score-display"></span>/10</h3>
+                        <p id="score-message"></p>
+                        
+                        <div class="quiz-actions" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button id="retry-btn" class="btn-secondary">Retry Test</button>
+                            <button id="reallocate-btn" class="btn-primary danger-btn" style="margin-top: 0;">
+                                <span class="btn-text">Reallocate Remaining Time</span>
+                                <div class="loader hidden" id="reallocate-loader"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
